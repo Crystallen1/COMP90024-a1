@@ -78,7 +78,7 @@ if __name__ == "__main__":
             except json.JSONDecodeError:
                 continue  # Skip lines with format errors
 
-    print(f"Rank {rank} processed {count} records.")
+    # print(f"Rank {rank} processed {count} records.")
 
     # calculate
     avg_hour_sentiment =  sentiment_by_hour
