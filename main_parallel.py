@@ -9,9 +9,9 @@ LARGE_FILE_PATH = 'mastodon-144g.ndjson'
 
 BUFFER_SIZE = 1024 * 1024 * 64
 def merge_dicts(a, b, dtype):
-    # 遍历字典 b 中的每个键和值
+    # Iterate over each key-value pair in dictionary b
     for key, value in b.items():
-        # a.get(key, 0) 获取字典 a 中对应键的值，如果没有则默认为 0
+        # a.get(key, 0) gets the value from a for the given key, or 0 if key not present
         a[key] = a.get(key, 0) + value
     return a
 
@@ -44,21 +44,21 @@ if __name__ == "__main__":
     sentiment_by_hour = defaultdict(float)
     sentiment_by_user = defaultdict(float)
     with open(SMALL_FILE_PATH, "r", encoding="utf-8") as f:
-        # 如果不是从文件开头开始，先定位到完整行起点
+        # If not starting from the beginning of the file, move to the start of a full line
         if start_offset > 0:
             f.seek(start_offset)
-            f.readline()  # 跳过可能的不完整行
+            f.readline()  # Skip possibly incomplete line
 
         while True:
             pos = f.tell()
-            # 超过当前进程负责的范围则退出
+            # Stop if current position exceeds the range for this process
             if pos >= end_offset:
                 break
             line = f.readline()
             if not line:
-                break  # 到达文件末尾
+                break  # Reached end of file
 
-            # 处理每一行数据
+            # Process each line of data
             if not line.strip():
                 continue
             try:
@@ -73,12 +73,12 @@ if __name__ == "__main__":
                 if user_id and username and sentiment is not None:
                     sentiment_by_user[(user_id, username)] += sentiment
                 if time and sentiment is not None:
-                    hour = time[:13]  # 提取到小时 (YYYY-MM-DDTHH)
+                    hour = time[:13]  # Extract hour (YYYY-MM-DDTHH)
                     sentiment_by_hour[hour] += sentiment
             except json.JSONDecodeError:
-                continue  # 忽略格式错误的行
+                continue  # Skip lines with format errors
 
-    print(f"Rank {rank} processed {len(sentiment_by_hour)} records.")
+    print(f"Rank {rank} processed {count} records.")
 
     # calculate
     avg_hour_sentiment =  sentiment_by_hour
